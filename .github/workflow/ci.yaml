@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: insight_events
+          POSTGRES_USER: insight
+          POSTGRES_PASSWORD: insight
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U insight -d insight_events"
+          --health-interval 5s --health-timeout 3s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew build
