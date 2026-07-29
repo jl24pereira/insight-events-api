@@ -71,6 +71,10 @@ public class CategoriaService {
         repository.delete(categoria);
     }
 
+    public Categoria getCategoriaEntity(UUID id) {
+        return searchCategoria(id);
+    }
+
     private Categoria searchCategoria(UUID id) {
         return repository.findById(id).orElseThrow(() -> ResourceNotFoundException.de("Categoria", id));
     }
