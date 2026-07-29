@@ -21,6 +21,6 @@ public interface EventoRepository extends JpaRepository<Evento, UUID> {
     @EntityGraph(attributePaths = "categoria")
     Optional<Evento> findWithCategoriaById(UUID id);
 
-    boolean existByCategoriaId(UUID categoriaId);
+    boolean existsByCategoriaId(UUID categoriaId);
 
 }

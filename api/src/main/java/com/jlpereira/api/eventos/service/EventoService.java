@@ -34,7 +34,7 @@ public class EventoService {
         return repository.findAll(pageable).map(EventoResponse::from);
     }
 
-    public EventoResponse obtener(UUID id) {
+    public EventoResponse getEvento(UUID id) {
         return EventoResponse.from(searchWithCategoria(id));
     }
 
