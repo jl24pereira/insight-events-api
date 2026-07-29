@@ -60,7 +60,7 @@ public class EventoService {
         Evento saved = repository.saveAndFlush(evento);
 
         historialService.registrar(saved, usuario, AccionHistorial.CREACION,
-                MessageFormat.format("Evento creado con codigo: {}", saved.getCodigo()));
+                MessageFormat.format("Evento creado con codigo: {0}", saved.getCodigo()));
 
         return EventoResponse.from(saved);
     }

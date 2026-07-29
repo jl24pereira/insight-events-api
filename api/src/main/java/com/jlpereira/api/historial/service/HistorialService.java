@@ -9,6 +9,7 @@ import com.jlpereira.api.historial.domain.HistorialEvento;
 import com.jlpereira.api.historial.domain.enums.AccionHistorial;
 import com.jlpereira.api.historial.dto.HistorialResponse;
 import com.jlpereira.api.historial.reposiroty.HistorialEventoRepository;
+import com.jlpereira.api.shared.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,9 @@ public class HistorialService {
     private final HistorialEventoRepository repository;
 
     public List<HistorialResponse> consultarPorEvento(UUID eventoId) {
+        if (!repository.existsById(eventoId))
+            throw ResourceNotFoundException.de("Evento", eventoId);
+
         return repository.buscarHistorialCompleto(eventoId).stream()
                 .map(HistorialResponse::from)
                 .toList();
