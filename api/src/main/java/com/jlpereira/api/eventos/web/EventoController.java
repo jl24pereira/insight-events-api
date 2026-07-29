@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import java.net.URI;
 import java.util.UUID;
 
+import com.jlpereira.api.eventos.dto.CambioEstadoRequest;
 import com.jlpereira.api.eventos.dto.EventoRequest;
 import com.jlpereira.api.eventos.dto.EventoResponse;
 import com.jlpereira.api.eventos.service.EventoService;
@@ -42,8 +43,9 @@ public class EventoController {
     }
 
     @PostMapping
-    public ResponseEntity<EventoResponse> crear(@Valid @RequestBody EventoRequest request) {
-        EventoResponse creado = service.createEvento(request);
+    public ResponseEntity<EventoResponse> crear(@Valid @RequestBody EventoRequest request,
+            @RequestHeader(value = "X-Usuario", defaultValue = "sistema") String usuario) {
+        EventoResponse creado = service.createEvento(request, usuario);
         return ResponseEntity
                 .created(URI.create("/api/v1/eventos/" + creado.id()))
                 .body(creado);
@@ -51,8 +53,17 @@ public class EventoController {
 
     @PutMapping("/{id}")
     public EventoResponse actualizar(
-            @PathVariable UUID id, @Valid @RequestBody EventoRequest request) {
-        return service.updateEvento(id, request);
+            @PathVariable UUID id, @Valid @RequestBody EventoRequest request,
+            @RequestHeader(value = "X-Usuario", defaultValue = "sistema") String usuario) {
+        return service.updateEvento(id, request, usuario);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public EventoResponse actualizar(
+            @PathVariable UUID id,
+            @Valid @RequestBody CambioEstadoRequest request,
+            @RequestHeader(value = "X-Usuario", defaultValue = "sistema") String usuario) {
+        return service.changeStatus(id, request.estado(), request.comentario(), usuario);
     }
 
     @DeleteMapping("/{id}")
