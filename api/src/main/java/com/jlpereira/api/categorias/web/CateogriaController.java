@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
  * @author Jose Luis Pereira
  */
 @RestController
-@RequestMapping("/api/v1/categoria")
+@RequestMapping("/api/v1/categorias")
 @RequiredArgsConstructor
 public class CateogriaController {
 
