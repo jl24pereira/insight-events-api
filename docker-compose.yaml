@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:18.4-alpine3.23
+    container_name: insight-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: insight_events
+      POSTGRES_USER: insight
+      POSTGRES_PASSWORD: insight
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U insight -d insight_events"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata:
