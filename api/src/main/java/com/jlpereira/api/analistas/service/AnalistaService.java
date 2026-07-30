@@ -1,5 +1,6 @@
 package com.jlpereira.api.analistas.service;
 
+import java.text.MessageFormat;
 import java.util.UUID;
 
 import com.jlpereira.api.analistas.domain.Analista;
@@ -40,7 +41,7 @@ public class AnalistaService {
         String correo = request.correoNormalizado();
 
         if (repository.existsByCorreo(correo)) {
-            throw new BusinessRuleException("Ya existe un analista con el correo: " + correo);
+            throw new BusinessRuleException(MessageFormat.format("Ya existe analista con el correo: {0}", correo));
         }
 
         Analista analista = Analista.builder()
@@ -57,7 +58,7 @@ public class AnalistaService {
         String correo = request.correoNormalizado();
 
         if (repository.existsByCorreoAndIdNot(correo, id)) {
-            throw new BusinessRuleException("Ya existe otro analista con el correo: " + correo);
+            throw new BusinessRuleException(MessageFormat.format("Ya existe analista con el correo: {0}", correo));
         }
 
         analista.setNombre(request.nombre().trim());

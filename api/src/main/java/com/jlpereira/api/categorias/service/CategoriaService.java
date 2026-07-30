@@ -40,7 +40,7 @@ public class CategoriaService {
     public CategoriaResponse createCategoria(CategoriaRequest request) {
         if (repository.existsByNombreIgnoreCase(request.nombre())) {
             throw new BusinessRuleException(
-                    MessageFormat.format("Ya existe categoria con el nombre: {}", request.nombre()));
+                    MessageFormat.format("Ya existe categoria con el nombre: {0}", request.nombre()));
         }
 
         Categoria categoria = Categoria.builder()
@@ -57,7 +57,7 @@ public class CategoriaService {
 
         if (repository.existsByNombreIgnoreCaseAndIdNot(request.nombre(), id))
             throw new BusinessRuleException(
-                    MessageFormat.format("Ya existe categoria con el nombre: {}", request.nombre()));
+                    MessageFormat.format("Ya existe categoria con el nombre: {0}", request.nombre()));
 
         categoria.setNombre(request.nombre());
         categoria.setDescripcion(request.descripcion());
