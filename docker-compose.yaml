@@ -17,5 +17,22 @@ services:
       timeout: 3s
       retries: 5
 
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: insight-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/insight_events
+      DB_USER: insight
+      DB_PASSWORD: insight
+      PORT: 8080
+    ports:
+      - "8080:8080"
+
 volumes:
   pgdata:
