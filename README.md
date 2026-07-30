@@ -68,7 +68,7 @@ No hace falta tener Java ni PostgreSQL instalados localmente — todo corre en c
 1. **Clona el repositorio**:
 
    ```bash
-   git clone https://github.com/tuusuario/insight-events-api.git
+   git clone https://github.com/jl24pereira/insight-events-api.git
    cd insight-events-api
    ```
 
@@ -202,4 +202,3 @@ Los `V__` corren una sola vez, en orden, y no se pueden modificar después de ap
 - Pruebas Unitarias, y configuracion para Code Coverage, para mantener una calidad de codigo correcta.
 - Documentación OpenAPI/Swagger.
 - Despliegue público en un proveedor administrado (Render, Railway).
-
