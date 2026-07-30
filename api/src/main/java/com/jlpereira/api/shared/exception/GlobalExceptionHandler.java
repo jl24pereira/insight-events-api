@@ -69,6 +69,11 @@ public class GlobalExceptionHandler {
                 "La operación viola una restricción de integridad de datos", req);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> estadoInvalido(IllegalStateException ex, HttpServletRequest request) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
+    }
+
     private ResponseEntity<ErrorResponse> build(
             HttpStatus status, String mensaje, HttpServletRequest req) {
         return ResponseEntity.status(status).body(

@@ -1,39 +1,44 @@
 package com.jlpereira.api.asignaciones.repository;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AsignacionSpRepository {
 
-    private final SimpleJdbcCall jdbcCall;
+    private final JdbcTemplate jdbcTemplate;
 
-    public AsignacionSpRepository(DataSource dataSource) {
-        this.jdbcCall = new SimpleJdbcCall(dataSource)
-                .withProcedureName("sp_asignar_evento")
-                .declareParameters(
-                        new SqlParameter("p_evento_id", Types.OTHER),
-                        new SqlParameter("p_analista_id", Types.OTHER),
-                        new SqlParameter("p_usuario", Types.VARCHAR),
-                        new SqlOutParameter("p_asignacion_id", Types.OTHER));
+    public AsignacionSpRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public UUID asignar(UUID eventoId, UUID analistaId, String usuario) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("p_evento_id", eventoId);
-        params.put("p_analista_id", analistaId);
-        params.put("p_usuario", usuario);
+        return jdbcTemplate.execute((Connection conn) -> {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "CALL sp_asignar_evento(?, ?, ?, NULL)")) {
 
-        Map<String, Object> resultado = jdbcCall.execute(params);
-        return (UUID) resultado.get("p_asignacion_id");
+                ps.setObject(1, eventoId, Types.OTHER);
+                ps.setObject(2, analistaId, Types.OTHER);
+                ps.setString(3, usuario);
+
+                boolean tieneResultado = ps.execute();
+                if (tieneResultado) {
+                    try (ResultSet rs = ps.getResultSet()) {
+                        if (rs.next()) {
+                            return (UUID) rs.getObject(1);
+                        }
+                    }
+                }
+                throw new IllegalStateException(
+                        "El procedimiento no devolvió ningún resultado");
+            }
+        });
     }
 }

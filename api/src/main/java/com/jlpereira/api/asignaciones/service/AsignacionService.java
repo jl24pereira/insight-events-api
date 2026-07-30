@@ -41,7 +41,9 @@ public class AsignacionService {
     }
 
     private RuntimeException traducirError(DataAccessException ex) {
-        String mensaje = ex.getMostSpecificCause().getMessage();
+        String mensaje = ex.getCause() != null
+                ? ex.getCause().getMessage()
+                : ex.getMessage();
 
         if (mensaje.contains("EVENTO_NO_ENCONTRADO")) {
             return ResourceNotFoundException.de("Evento", extraerId(mensaje));
