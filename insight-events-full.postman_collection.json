@@ -1,0 +1,1259 @@
+{
+    "info": {
+        "name": "Insight Events API",
+        "description": "Colección completa: categorías, analistas, eventos, historial y asignación. Ejecutar en orden para que las variables se encadenen solas.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080/api/v1"
+        },
+        {
+            "key": "usuario",
+            "value": "jlpereira"
+        },
+        {
+            "key": "categoriaId",
+            "value": ""
+        },
+        {
+            "key": "categoriaId2",
+            "value": ""
+        },
+        {
+            "key": "analistaId",
+            "value": ""
+        },
+        {
+            "key": "eventoId",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "01 - Categorías",
+            "item": [
+                {
+                    "name": "Crear categoría",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    pm.collectionVariables.set('categoriaId', pm.response.json().id);",
+                                    "}",
+                                    "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Incendio estructural\",\n  \"descripcion\": \"Siniestros en edificaciones\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Crear segunda categoría (para pruebas de duplicado)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    pm.collectionVariables.set('categoriaId2', pm.response.json().id);",
+                                    "}",
+                                    "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Reporte de clima\",\n  \"descripcion\": \"Eventos meteorológicos\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Listar categorías (paginado)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias?page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Obtener categoría por id",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias/{{categoriaId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias",
+                                "{{categoriaId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Actualizar categoría",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Incendio estructural\",\n  \"descripcion\": \"Siniestros en edificaciones y locales comerciales\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias/{{categoriaId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias",
+                                "{{categoriaId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - nombre duplicado (409)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 409', () => pm.response.to.have.status(409));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Incendio estructural\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - nombre vacío (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - id inexistente (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias/01920000-0000-7000-8000-000000000099",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias",
+                                "01920000-0000-7000-8000-000000000099"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - uuid inválido (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias/no-es-uuid",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias",
+                                "no-es-uuid"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "02 - Analistas",
+            "item": [
+                {
+                    "name": "Crear analista",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    pm.collectionVariables.set('analistaId', pm.response.json().id);",
+                                    "}",
+                                    "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"María Fernández\",\n  \"correo\": \"maria.fernandez@insight.test\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/analistas",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analistas"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Listar analistas (paginado)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/analistas?page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analistas"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Obtener analista por id",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/analistas/{{analistaId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analistas",
+                                "{{analistaId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Actualizar analista",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"María Fernández Solís\",\n  \"correo\": \"maria.fernandez@insight.test\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/analistas/{{analistaId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analistas",
+                                "{{analistaId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - correo con formato inválido (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Prueba\",\n  \"correo\": \"no-es-un-correo\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/analistas",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analistas"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - correo duplicado normalizado (409)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 409', () => pm.response.to.have.status(409));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Duplicado\",\n  \"correo\": \"  MARIA.FERNANDEZ@INSIGHT.TEST  \"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/analistas",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analistas"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "03 - Eventos",
+            "item": [
+                {
+                    "name": "Crear evento",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    pm.collectionVariables.set('eventoId', pm.response.json().id);",
+                                    "}",
+                                    "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                                    "pm.test('Tiene codigo generado', () => {",
+                                    "    pm.expect(pm.response.json().codigo).to.match(/^EVT-\\d{4}-\\d{5}$/);",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"titulo\": \"Colisión múltiple en bulevar norte\",\n  \"descripcion\": \"Tres vehículos involucrados\",\n  \"fecha\": \"2026-07-28T14:30:00-06:00\",\n  \"prioridad\": \"ALTA\",\n  \"fuente\": \"Central 911\",\n  \"categoriaId\": \"{{categoriaId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Listar eventos (paginado)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos?page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Obtener evento por id",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Actualizar evento",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"titulo\": \"Colisión múltiple - carril liberado\",\n  \"descripcion\": \"Vehículos removidos, tránsito restablecido\",\n  \"fecha\": \"2026-07-28T14:30:00-06:00\",\n  \"prioridad\": \"MEDIA\",\n  \"fuente\": \"Central 911\",\n  \"categoriaId\": \"{{categoriaId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Cambiar estado -> EN_PROCESO",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('Estado actualizado', () => {",
+                                    "    pm.expect(pm.response.json().estado).to.eql('EN_PROCESO');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"estado\": \"EN_PROCESO\",\n  \"comentario\": \"Analista asignado en campo\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}/estado",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}",
+                                "estado"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - prioridad fuera del enum (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"titulo\": \"Prueba\",\n  \"fecha\": \"2026-07-29T08:15:00-06:00\",\n  \"prioridad\": \"URGENTE\",\n  \"categoriaId\": \"{{categoriaId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - categoría inexistente (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"titulo\": \"Prueba\",\n  \"fecha\": \"2026-07-29T08:15:00-06:00\",\n  \"prioridad\": \"ALTA\",\n  \"categoriaId\": \"01920000-0000-7000-8000-000000000099\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - repetir mismo estado (409)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 409', () => pm.response.to.have.status(409));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"estado\": \"EN_PROCESO\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}/estado",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}",
+                                "estado"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "04 - Historial",
+            "item": [
+                {
+                    "name": "Consultar historial completo",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('Orden descendente por fecha', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    for (let i = 0; i < body.length - 1; i++) {",
+                                    "        pm.expect(new Date(body[i].fecha) >= new Date(body[i+1].fecha)).to.be.true;",
+                                    "    }",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}/historial",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}",
+                                "historial"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - historial de evento inexistente (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/01920000-0000-7000-8002-000000000099/historial",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "01920000-0000-7000-8002-000000000099",
+                                "historial"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "05 - Asignación",
+            "item": [
+                {
+                    "name": "Asignar evento a analista",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                                    "pm.test('Trae el evento y el analista', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    pm.expect(body.eventoId).to.eql(pm.collectionVariables.get('eventoId'));",
+                                    "    pm.expect(body.analistaId).to.eql(pm.collectionVariables.get('analistaId'));",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"analistaId\": \"{{analistaId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}/asignacion",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}",
+                                "asignacion"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Verificar evento -> estado ASIGNADO",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('Estado ASIGNADO', () => {",
+                                    "    pm.expect(pm.response.json().estado).to.eql('ASIGNADO');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Verificar historial -> incluye ASIGNACION",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('Contiene una entrada de asignación', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    pm.expect(body.some(h => h.accion === 'ASIGNACION')).to.be.true;",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}/historial",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}",
+                                "historial"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - asignación duplicada (409)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 409', () => pm.response.to.have.status(409));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"analistaId\": \"{{analistaId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}/asignacion",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}",
+                                "asignacion"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - analista inexistente (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"analistaId\": \"01920000-0000-7000-8001-000000000099\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}/asignacion",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}",
+                                "asignacion"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Error - evento inexistente (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Usuario",
+                                "value": "{{usuario}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"analistaId\": \"{{analistaId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/01920000-0000-7000-8002-000000000099/asignacion",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "01920000-0000-7000-8002-000000000099",
+                                "asignacion"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "06 - Limpieza",
+            "item": [
+                {
+                    "name": "Eliminar evento",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "eventos",
+                                "{{eventoId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Eliminar analista",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{baseUrl}}/analistas/{{analistaId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analistas",
+                                "{{analistaId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Eliminar categoría",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias/{{categoriaId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias",
+                                "{{categoriaId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Eliminar segunda categoría",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{baseUrl}}/categorias/{{categoriaId2}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "categorias",
+                                "{{categoriaId2}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
