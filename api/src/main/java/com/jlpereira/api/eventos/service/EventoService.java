@@ -88,7 +88,8 @@ public class EventoService {
         EstadoEvento anterior = evento.getEstado();
 
         if (anterior == nuevoEstado)
-            throw new BusinessRuleException(MessageFormat.format("El evento ya se encuentra en estado: ", nuevoEstado));
+            throw new BusinessRuleException(
+                    MessageFormat.format("El evento ya se encuentra en estado: {0}", nuevoEstado));
 
         evento.setEstado(nuevoEstado);
 

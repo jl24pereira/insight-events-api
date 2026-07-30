@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.jlpereira.api.eventos.domain.Evento;
+import com.jlpereira.api.eventos.repository.EventoRepository;
 import com.jlpereira.api.historial.domain.HistorialEvento;
 import com.jlpereira.api.historial.domain.enums.AccionHistorial;
 import com.jlpereira.api.historial.dto.HistorialResponse;
@@ -26,9 +27,10 @@ import lombok.RequiredArgsConstructor;
 public class HistorialService {
 
     private final HistorialEventoRepository repository;
+    private final EventoRepository eventoRepository;
 
     public List<HistorialResponse> consultarPorEvento(UUID eventoId) {
-        if (!repository.existsById(eventoId))
+        if (!eventoRepository.existsById(eventoId))
             throw ResourceNotFoundException.de("Evento", eventoId);
 
         return repository.buscarHistorialCompleto(eventoId).stream()
